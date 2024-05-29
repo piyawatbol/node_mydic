@@ -12,10 +12,7 @@ mongoose.connect('mongodb+srv://piyawat:1234@cluster0.92gccgo.mongodb.net/my-dic
         .catch((err) => console.error(err))
 
 
-app.listen(PORT, ()=>{
-    console.log(`Api Listening on PORT ${PORT}`);
-})
-
+app.use(express.json())
 
 app.get('/',(req,res)=>{
     res.send("hello to vocab")
@@ -23,5 +20,11 @@ app.get('/',(req,res)=>{
 
 app.use('/vocab',require('./routes/vocab'))
 
+app.use('/oxford',require('./routes/oxford'))
+
+
+app.listen(PORT, ()=>{
+    console.log(`Api Listening on PORT ${PORT}`);
+})
 
 module.exports = app
