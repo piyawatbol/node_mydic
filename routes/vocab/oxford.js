@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const Oxford = require("../models/Oxford");
+const Oxford = require("../../models/Oxford");
+const auth = require("../../middleware/auth");
 
-router.get("/", async (req, res) => {
+router.get("/",auth, async (req, res) => {
   try {
     const data = await Oxford.find().sort({ word: 1 });
     res.status(200).send(data);
@@ -10,7 +11,7 @@ router.get("/", async (req, res) => {
     console.log(err);
   }
 });
-router.post("/", async (req, res) => {
+router.post("/",auth, async (req, res) => {
     const { word, mean } = req.body;
     try {
       if (word == null || mean == null || word == "" || mean == "") {

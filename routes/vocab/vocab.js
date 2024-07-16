@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const Vocab = require("../models/Vocab");
+const Vocab = require("../../models/Vocab");
+const auth = require("../../middleware/auth");
 
-router.get("/", async (req, res) => {
+router.get("/" ,auth, async (req, res) => {
   try {
     const data = await Vocab.find().sort({ word: 1 });
     res.status(200).send(data);
@@ -11,7 +12,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/:letter", async (req, res) => {
+router.post("/:letter",auth, async (req, res) => {
   const letter = req.params.letter;
   try {
     if (!letter || letter.length !== 1) {
@@ -32,7 +33,7 @@ router.post("/:letter", async (req, res) => {
   }
 });
 
-router.get("/random", async (req, res) => {
+router.get("/random",auth, async (req, res) => {
   try {
     const [randomData] = await Vocab.aggregate([{ $sample: { size: 1 } }]);
     if (randomData) {
@@ -49,7 +50,7 @@ router.get("/random", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/",auth, async (req, res) => {
   const { word, mean } = req.body;
   try {
     if (word == null || mean == null || word == "" || mean == "") {
@@ -78,7 +79,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id",auth, async (req, res) => {
   try {
     const vocabId = req.params.id;
 
@@ -98,7 +99,7 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",auth, async (req, res) => {
   try {
     const vocabId = req.params.id;
 
@@ -112,7 +113,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.post("/0/reset-count", async (req, res) => {
+router.post("/0/reset-count",auth, async (req, res) => {
   try {
     await Vocab.updateMany({}, { $set: { count: 0 } });
 
